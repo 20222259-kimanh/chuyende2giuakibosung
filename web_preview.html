@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Academy - Web Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #3F3D56;
+            --bg: #F8F9FE;
+            --text: #1D1D1D;
+            --grey: #8E8E93;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #phone-frame {
+            width: 375px;
+            height: 812px;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .profile-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100');
+            background-size: cover;
+        }
+
+        #content-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 24px 24px;
+        }
+
+        .welcome-section h1 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .welcome-section p {
+            color: var(--grey);
+            font-size: 14px;
+        }
+
+        .lesson-day-card {
+            margin-top: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.2);
+        }
+
+        .lesson-day-card h2 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .lesson-day-card p {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 32px 0 16px;
+        }
+
+        .section-header h3 {
+            font-size: 18px;
+        }
+
+        .section-header a {
+            color: var(--primary);
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .lesson-card {
+            display: flex;
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .lesson-thumb {
+            width: 100px;
+            height: 100px;
+            border-radius: 16px 0 0 16px;
+            object-fit: cover;
+        }
+
+        .lesson-info {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .lesson-info h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .lesson-meta {
+            font-size: 12px;
+            color: var(--grey);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .star { color: #FFCC00; }
+
+        /* Detail Screen Styles */
+        .detail-screen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 10;
+        }
+
+        .detail-header {
+            height: 240px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-size: 20px;
+        }
+
+        .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .detail-body {
+            padding: 24px;
+        }
+
+        .badge {
+            background: #E8E7FF;
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 11px;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .detail-title {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .detail-desc {
+            color: var(--grey);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .content-list {
+            list-style: none;
+        }
+
+        .content-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .checkmark {
+            color: #4CAF50;
+        }
+
+        .footer-action {
+            margin-top: 32px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="phone-frame">
+    <!-- List Screen -->
+    <div id="list-screen">
+        <header>
+            <div class="header-title">English Academy</div>
+            <div class="profile-img"></div>
+        </header>
+        <div id="content-container">
+            <div class="welcome-section">
+                <h1>Welcome back, Alex!</h1>
+                <p>Continue your journey to mastery.</p>
+            </div>
+
+            <div class="lesson-day-card">
+                <h2>Lesson of the day</h2>
+                <p>Advanced Verbs in Action</p>
+                <button class="btn-white">Resume Now</button>
+            </div>
+
+            <div class="section-header">
+                <h3>Popular Lessons</h3>
+                <a href="#">View All</a>
+            </div>
+
+            <div id="lesson-list">
+                <!-- Lessons will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Screen -->
+    <div id="detail-screen" class="detail-screen">
+        <div id="detail-header" class="detail-header">
+            <div class="back-btn" onclick="goBack()">&larr;</div>
+            <div class="play-btn">▶</div>
+        </div>
+        <div class="detail-body">
+            <span class="badge">Intermediate</span>
+            <h2 id="detail-title" class="detail-title"></h2>
+            <p id="detail-desc" class="detail-desc"></p>
+            <h3>What you will learn</h3>
+            <ul id="content-list" class="content-list">
+                <!-- Contents will be injected here -->
+            </ul>
+            <div class="footer-action">
+                <button class="btn-primary">Start Lesson</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const lessons = [
+        {
+            id: '1',
+            title: 'English Foundations: Basic Grammar',
+            description: 'Learn the core building blocks of the English language, including sentence structure and main parts of speech.',
+            thumb: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=800',
+            duration: '15:20',
+            rating: '4.8',
+            contents: ['Introduction to Nouns and Verbs', 'Basic Sentence Structures', 'Common Grammar Pitfalls', 'Practice Exercises']
+        },
+        {
+            id: '2',
+            title: 'Mastering Pronunciation',
+            description: 'Improve your English accent and clarity with focused pronunciation exercises on difficult sounds.',
+            thumb: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800',
+            duration: '12:45',
+            rating: '4.9',
+            contents: ['Vowel Sounds in Detail', 'Consonant Clusters', 'Intonation and Stress Patterns', 'Real-world Conversation Practice']
+        },
+        {
+            id: '3',
+            title: 'Business English Essentials',
+            description: 'Professional vocabulary and etiquette for workplace communication, meetings, and emails.',
+            thumb: 'https://images.unsplash.com/photo-1454165833767-027ffea9e77b?auto=format&fit=crop&q=80&w=800',
+            duration: '20:10',
+            rating: '4.7',
+            contents: ['Writing Professional Emails', 'Meeting Terminology', 'Negotiation Skills', 'Presentation Techniques']
+        }
+    ];
+
+    const listElement = document.getElementById('lesson-list');
+
+    function renderList() {
+        listElement.innerHTML = '';
+        lessons.forEach(lesson => {
+            const card = document.createElement('div');
+            card.className = 'lesson-card';
+            card.onclick = () => showDetail(lesson);
+            card.innerHTML = `
+                <img src="${lesson.thumb}" class="lesson-thumb">
+                <div class="lesson-info">
+                    <h4>${lesson.title}</h4>
+                    <div class="lesson-meta">
+                        <span>🕒 ${lesson.duration}</span>
+                        <span><span class="star">★</span> ${lesson.rating}</span>
+                    </div>
+                </div>
+            `;
+            listElement.appendChild(card);
+        });
+    }
+
+    function showDetail(lesson) {
+        document.getElementById('detail-header').style.backgroundImage = `url(${lesson.thumb})`;
+        document.getElementById('detail-title').innerText = lesson.title;
+        document.getElementById('detail-desc').innerText = lesson.description;
+        
+        const contentList = document.getElementById('content-list');
+        contentList.innerHTML = '';
+        lesson.contents.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'content-item';
+            li.innerHTML = `<span class="checkmark">✓</span> <span>${item}</span>`;
+            contentList.appendChild(li);
+        });
+
+        document.getElementById('detail-screen').style.display = 'block';
+    }
+
+    function goBack() {
+        document.getElementById('detail-screen').style.display = 'none';
+    }
+
+    renderList();
+</script>
+
+</body>
+</html>
